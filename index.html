@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Automation Solutions - Transform Your Enterprise</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 10, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #fff, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3)); }
+            to { filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.4)); }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .floating-cards {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-card {
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .card-1 { top: 20%; left: 10%; animation-delay: 0s; }
+        .card-2 { top: 60%; right: 10%; animation-delay: 2s; }
+        .card-3 { bottom: 20%; left: 20%; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #fff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .testimonials {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 3rem 2rem;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .lead-form {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1));
+            padding: 3rem 2rem;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10, 10, 10, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">AI Automation Pro</div>
+            <div>
+                <a href="#services" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Services</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <canvas id="three-canvas"></canvas>
+        <div class="floating-cards">
+            <div class="floating-card card-1">
+                <div style="font-size: 0.8rem; opacity: 0.8;">Sales Automation</div>
+                <div style="font-size: 1.2rem; margin-top: 0.5rem;">+300% ROI</div>
+            </div>
+            <div class="floating-card card-2">
+                <div style="font-size: 0.8rem; opacity: 0.8;">HR Process</div>
+                <div style="font-size: 1.2rem; margin-top: 0.5rem;">80% Time Saved</div>
+            </div>
+            <div class="floating-card card-3">
+                <div style="font-size: 0.8rem; opacity: 0.8;">Marketing AI</div>
+                <div style="font-size: 1.2rem; margin-top: 0.5rem;">5x Leads</div>
+            </div>
+        </div>
+        
+        <div class="hero-content">
+            <h1>Transform Your Enterprise with AI Automation</h1>
+            <p>Revolutionary AI solutions that automate your sales, marketing, and HR processes. Get your SaaS MVP in just 15 days and scale your business with cutting-edge automation.</p>
+            <div class="cta-buttons">
+                <a href="https://cal.com/your-calendar-link" class="btn btn-primary" target="_blank">Book Free Consultation</a>
+                <button class="btn btn-secondary" onclick="openLeadForm()">Get Free Automation Plan</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">500+</div>
+                <div>Enterprises Automated</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">15</div>
+                <div>Days to MVP</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">300%</div>
+                <div>Average ROI Increase</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">24/7</div>
+                <div>AI Support</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="services">
+        <h2>AI Automation Solutions</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3>Sales Automation</h3>
+                <p>Intelligent lead qualification, automated follow-ups, and predictive analytics that boost your sales conversion by 300%.</p>
+                <ul style="margin-top: 1rem; opacity: 0.8;">
+                    <li>• Lead scoring & qualification</li>
+                    <li>• Automated email sequences</li>
+                    <li>• Sales pipeline optimization</li>
+                    <li>• CRM integration</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h3>Marketing Intelligence</h3>
+                <p>AI-powered content generation, social media automation, and campaign optimization that generates 5x more qualified leads.</p>
+                <ul style="margin-top: 1rem; opacity: 0.8;">
+                    <li>• Content automation</li>
+                    <li>• Social media management</li>
+                    <li>• Campaign optimization</li>
+                    <li>• Analytics & insights</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">👥</div>
+                <h3>HR Process Automation</h3>
+                <p>Streamline recruitment, onboarding, and employee management with AI that saves 80% of manual work time.</p>
+                <ul style="margin-top: 1rem; opacity: 0.8;">
+                    <li>• Resume screening</li>
+                    <li>• Interview scheduling</li>
+                    <li>• Onboarding automation</li>
+                    <li>• Performance tracking</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">⚡</div>
+                <h3>SaaS MVP Development</h3>
+                <p>From concept to deployment in just 15 days. Full-stack development with AI integration and scalable architecture.</p>
+                <ul style="margin-top: 1rem; opacity: 0.8;">
+                    <li>• Rapid prototyping</li>
+                    <li>• AI integration</li>
+                    <li>• Cloud deployment</li>
+                    <li>• Ongoing support</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🔧</div>
+                <h3>Custom AI Solutions</h3>
+                <p>Bespoke AI tools tailored to your specific business needs. From chatbots to complex data analysis systems.</p>
+                <ul style="margin-top: 1rem; opacity: 0.8;">
+                    <li>• Custom development</li>
+                    <li>• API integrations</li>
+                    <li>• Training & support</li>
+                    <li>• Maintenance</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <h3>Free Consultation</h3>
+                <p>Get expert advice on your automation strategy. Free analysis of your current processes and AI implementation roadmap.</p>
+                <ul style="margin-top: 1rem; opacity: 0.8;">
+                    <li>• Process analysis</li>
+                    <li>• ROI calculations</li>
+                    <li>• Implementation plan</li>
+                    <li>• Free trial automation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="testimonials">
+            <h2 style="margin-bottom: 2rem;">What Our Clients Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p>"Their AI automation increased our sales by 250% in just 3 months. The ROI was incredible!"</p>
+                    <div style="margin-top: 1rem; font-weight: 600;">- Sarah Johnson, CEO TechCorp</div>
+                </div>
+                <div class="testimonial">
+                    <p>"The 15-day MVP delivery was game-changing. We launched faster than ever with perfect AI integration."</p>
+                    <div style="margin-top: 1rem; font-weight: 600;">- Michael Chen, CTO StartupXYZ</div>
+                </div>
+                <div class="testimonial">
+                    <p>"HR automation saved us 20 hours per week. The candidate screening is incredibly accurate."</p>
+                    <div style="margin-top: 1rem; font-weight: 600;">- Lisa Rodriguez, HR Director</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Ready to Transform Your Business?</h2>
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <p style="font-size: 1.2rem; opacity: 0.8;">Get a free consultation and custom automation plan for your enterprise</p>
+        </div>
+        <div class="cta-buttons">
+            <a href="https://cal.com/your-calendar-link" class="btn btn-primary" target="_blank">Schedule Free Call</a>
+            <button class="btn btn-secondary" onclick="openLeadForm()">Get Free Automation Analysis</button>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="section">
+            <h3 style="margin-bottom: 1rem;">Contact Us</h3>
+            <p>📧 hello@aiautomationpro.com</p>
+            <p>📞 +1 (555) 123-4567</p>
+            <p style="margin-top: 2rem; opacity: 0.6;">© 2025 AI Automation Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Lead Generation Modal -->
+    <div id="leadModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLeadForm()">&times;</span>
+            <h3 style="margin-bottom: 1.5rem;">Get Your Free AI Automation Plan</h3>
+            <form class="lead-form" onsubmit="submitLeadForm(event)" style="padding: 0;">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" name="name" required placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" name="company" placeholder="Your company name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" placeholder="+1 (555) 123-4567">
+                </div>
+                
+                <div class="form-group">
+                    <label>Department to Automate *</label>
+                    <select name="department" required>
+                        <option value="">Select Department</option>
+                        <option value="sales">Sales</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="operations">Operations</option>
+                        <option value="customer-service">Customer Service</option>
+                        <option value="multiple">Multiple Departments</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Monthly Budget Range</label>
+                    <select name="budget">
+                        <option value="">Select Budget Range</option>
+                        <option value="5k-15k">$5K - $15K</option>
+                        <option value="15k-50k">$15K - $50K</option>
+                        <option value="50k-100k">$50K - $100K</option>
+                        <option value="100k+">$100K+</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Current Challenges</label>
+                    <textarea name="challenges" rows="3" placeholder="Describe your current business challenges that AI could solve..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Get Free Automation Plan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Three.js Background Animation
+        let scene, camera, renderer, particles;
+        
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            // Create particles
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const velocities = [];
+            
+            for (let i = 0; i < 300; i++) {
+                positions.push(
+                    (Math.random() - 0.5) * 2000,
+                    (Math.random() - 0.5) * 2000,
+                    (Math.random() - 0.5) * 2000
+                );
+                velocities.push(
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2
+                );
+            }
+            
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            
+            const material = new THREE.PointsMaterial({
+                color: 0x00d4ff,
+                size: 2,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+            
+            camera.position.z = 1000;
+            
+            animate();
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            particles.rotation.x += 0.001;
+            particles.rotation.y += 0.002;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Modal Functions
+        function openLeadForm() {
+            document.getElementById('leadModal').style.display = 'block';
+        }
+        
+        function closeLeadForm() {
+            document.getElementById('leadModal').style.display = 'none';
+        }
+        
+        function submitLeadForm(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            // Here you would typically send the data to your server
+            console.log('Lead form submitted:', data);
+            
+            alert('Thank you! We\'ll contact you within 24 hours with your free automation plan.');
+            closeLeadForm();
+            event.target.reset();
+        }
+        
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Initialize Three.js when page loads
+        window.addEventListener('load', initThree);
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('leadModal');
+            if (event.target === modal) {
+                closeLeadForm();
+            }
+        }
+    </script>
+</body>
+</html>
